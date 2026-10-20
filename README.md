@@ -15,7 +15,7 @@ It comes from the typed-input gates in my interactive stories at
 [cotc.casedefender.legal](https://cotc.casedefender.legal). In those stories some
 endings open only when the player types, in their own words, something the
 character has come to understand. This repo is a standalone rewrite of the harness
-I used to qualify the production judge model. The gate here is generic: a JSON spec
+I used to choose the judge model for the live game. The gate here is generic: a JSON spec
 with a scene, a criterion and a prompt template.
 
 ## Why a gate needs a gold corpus and a red team
@@ -31,8 +31,7 @@ Spot-checking a few inputs by hand shows you mostly the first kind. The second k
 only appears when you deliberately write inputs that *say the right words without
 meaning them*. That needs a labeled corpus with those inputs in it.
 
-**What happened in my game.** These are my own historical results from the game's
-production integration, recorded in my ship-gate notes from July 2026. **This repo
+**What happened in my game.** These are my own historical results from the live game, recorded in my ship-gate notes from July 2026. **This repo
 has not reproduced them.** In the game the gate decision was made inside the
 narration call, with server-side input checks in front of it, so the setup differs
 from the standalone judge here. The corpora are the same items.
@@ -45,7 +44,7 @@ from the standalone judge here. The corpora are the same items.
   reciting the right sentence even while the speaker disowned it. The third gate
   looked clean (0/32), but its adversarial zero came from a server-side keyword
   guard blocking those inputs, not from the model's judgment.
-- **So production moved to Claude Haiku 4.5 (2026-07-10).** After a server-side
+- **So the live game moved to Claude Haiku 4.5 (2026-07-10).** After a server-side
   input-sanitization fix (keyword-stuffing detection), the forgiveness gate, which
   guards the story's hidden ending, had **0/8 adversarial leaks** and 0/8 hollow
   leaks. Insincere-hollow leaks were at most 2/8 on every gate. On the red-team
@@ -178,7 +177,7 @@ the same command line evaluates a Claude model as the judge, and with
 - **Fail-closed parsing.** The judge must answer `VERDICT: PASS` or
   `VERDICT: FAIL`. Empty, missing, conflicting (both verdicts), or unterminated
   `<think>` output counts as **FAIL** and is counted as `unparseable` in the
-  summary. That is how the gate has to behave in production, so the eval measures
+  summary. That is how the gate has to behave in a live game, so the eval measures
   the same thing.
 - **Transport errors stop the run** rather than being scored as FAIL. Scoring an
   outage as FAIL would hide leaks. Runs are resumable, so stopping costs nothing.
